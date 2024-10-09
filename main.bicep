@@ -29,12 +29,25 @@ param addressPrefix string = '10.0.0.0/16'
 @description('The address prefix for the subnet')
 param subnetPrefix string = '10.0.0.0/24'
 
-@description('Network Security Group to allow HTTP and HTTPS access')
+@description('Network Security Group to allow SSH, HTTP, and HTTPS access')
 resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
   name: 'myNSG'
   location: location
   properties: {
     securityRules: [
+      {
+        name: 'Allow-SSH'
+        properties: {
+          priority: 1000
+          access: 'Allow'
+          direction: 'Inbound'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '22'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
       {
         name: 'Allow-HTTP'
         properties: {
